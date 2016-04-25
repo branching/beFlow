@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>beFlow</title>
+
+    <script type="text/javascript">
+
+    (function(){
+      "use strict";
+
+      window._beflowInitialize = function(compatible) {
+        if (!document.getElementById("beflow-info")) {
+          // Wait for DOM
+          window.setTimeout(function(){
+            _beflowInitialize(compatible);
+          }, 100);
+          return false;
+        }
+        if (window.beflow){
+          // Already initialized
+          return false;
+        }
+        if (!compatible) {
+          document.getElementById("beflow-info").innerHTML = "&raquo; You need a modern browser to run this. ";
+          document.getElementById("beflow-info").innerHTML += '<a href="#" onclick="_beflowInitialize(true);return false;">Try anyway?</a>';
+          return false;
+        } else {
+          document.getElementById("beflow-info").innerHTML = "";
+        }
+      }
+
+      // This tests to see if the browser can do data clone for postMessage
+      // We'll assume that if it can do that it can handle the rest
+      // Adapted from http://thecssninja.com/demo/sclones/
+      if(!!window.postMessage) {
+        try {
+          // Safari 5.1 will sometimes throw an exception and sometimes won't, lolwut?
+          // When it doesn't we capture the message event and check the
+          // internal [[Class]] property of the message being passed through.
+          // Safari will pass through DOM nodes as Null
+          // iOS Safari on the other hand passes it through as DOMWindow
+          window.onmessage = function(e){
+            var type = Object.prototype.toString.call(e.data);
+            var safariCompatible = (type.indexOf("Null") != -1 || type.indexOf("DOMWindow") != -1) ? true : false;
+            if (!window.beflow) {
+              _beflowInitialize(safariCompatible);
+            }
+            // Only keep the onmessage function for the one test
+            window.onmessage = null;
+          };
+          // Spec states you can't transmit DOM nodes and it will throw an error
+          // postMessage implimentations that support cloned data will throw.
+          window.postMessage(document.createElement("a"),"*");
+        } catch(e) {
+          // BBOS6 throws but doesn't pass through the correct exception
+          // so check error message
+          var validCompatible = (e.DATA_CLONE_ERR || e.message == "Cannot post cyclic structures.") ? true : false;
+          _beflowInitialize(validCompatible);
+        }
+      } else {
+        _beflowInitialize(false);
+      }
+
+    })();
+    </script>  
+
+  </head>
+  <body>
+    
+    <!-- Libs -->
+    <script src="libs/yepnope.min.js"></script>
+    <script src="libs/jquery.js"></script>
+    <script src="libs/jquery-ui/jquery-ui.js"></script>
+
+    <!-- Packaged libs -->
+    <script src="libs/underscore.js"></script>
+    <script src="libs/backbone.js"></script>
+    
+    <script src="libs/mousetrap.js"></script>
+    <script src="libs/mousetrap-pause.js"></script>
+    <script src="libs/jquery.ui.touch-punch.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Style -->
+    <link href="libs/jquery-ui/jquery-ui.css" rel="stylesheet" type="text/css"></link>
+    <link href='http://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'>
+    <link href="beflow.css" rel="stylesheet" type="text/css"></link>
+
+    <!-- Codemirror -->
+    <link rel=stylesheet href="libs/cm/lib/codemirror.css">
+    <script src="libs/cm/lib/codemirror.js"></script>
+    <script src="libs/cm/mode/xml/xml.js"></script>
+    <script src="libs/cm/mode/javascript/javascript.js"></script>
+    <script src="libs/cm/mode/css/css.js"></script>
+    <script src="libs/cm/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="libs/cm/addon/edit/matchbrackets.js"></script>
+
+    <!-- beflow -->
+    <script src="src/beflow.js"></script>
+    <script src="src/beflow-utils.js"></script>
+    <script src="src/eventshistory.js"></script>
+    <script src="src/local-app.js"></script>
+    <script src="src/local-app-view.js"></script>
+    <script src="src/graph.js"></script>
+    <script src="src/graph-view.js"></script>
+    <script src="src/node.js"></script>
+    <script src="src/node-view.js"></script>
+    <script src="src/node-box.js"></script>
+    <script src="src/node-box-view.js"></script>
+    <script src="src/node-box-native-view.js"></script>
+    <script src="src/port.js"></script>
+    <script src="src/port-view.js"></script>
+    <script src="src/port-in.js"></script>
+    <script src="src/port-in-view.js"></script>
+    <script src="src/port-out.js"></script>
+    <script src="src/port-out-view.js"></script>
+    <script src="src/module.js"></script>
+    <script src="src/module-view.js"></script>
+    <script src="src/edge.js"></script>
+    <script src="src/edge-view.js"></script>
+    <script src="src/router.js"></script>
+
+    <!-- Plugins -->
+    <script src="src/plugins/layout.js"></script>
+    <script src="src/plugins/pages.js"></script>
+    <script src="src/plugins/page.js"></script>
+    <script src="src/plugins/page-view.js"></script>
+    <script src="src/plugins/library.js"></script>
+
+    <!-- Examples -->
+    <script src="src/examples/module-library.js"></script>
+
+    <!-- Last -->
+    <script src="src/beflow-last.js"></script>
+
+  </body>
+</html>

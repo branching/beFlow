@@ -1,0 +1,12 @@
+{
+  info: {
+    author: "author of app",
+    title: "app",
+    description: "description of app",
+    parents: [],
+    url: ""
+  },
+  pages: [],
+  nodes: [],
+  edges: []
+}

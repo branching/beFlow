@@ -1,0 +1,14 @@
+{
+  "allAppsFolder": "../apps/",
+  "newBlankFolder": "newblank",
+  "defaultAppName": "app",
+  "svrPath": "/svr/",
+  "clnPath": "/cln/src/",
+  "sourceFile": "source.js",
+  "configFile": "config.json",
+  "beflowFile": "beflow.json",
+  "clnNodesFolder": "/nodes/",
+	"nodeModules": "/node_modules/",
+	"clnLibs": "/cln/libs/",
+	"srcLibs": "src/libs/"
+}
